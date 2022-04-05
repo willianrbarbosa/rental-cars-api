@@ -5,23 +5,23 @@ import { CategoryService } from "../services/CategoryService";
 class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  create(request: Request, response: Response): Response {
+  async create(request: Request, response: Response): Promise<Response> {
     const { name, description } = request.body;
 
-    this.categoryService.create({ name, description });
+    await this.categoryService.create({ name, description });
 
     return response.status(201).send();
   }
 
-  list(request: Request, response: Response): Response {
-    const categories = this.categoryService.list();
+  async list(request: Request, response: Response): Promise<Response> {
+    const categories = await this.categoryService.list();
     return response.status(200).json(categories);
   }
 
-  importFile(request: Request, response: Response): Response {
+  async importFile(request: Request, response: Response): Promise<Response> {
     const { file } = request;
 
-    this.categoryService.importFile(file);
+    await this.categoryService.importFile(file);
     return response.status(201).send();
   }
 }

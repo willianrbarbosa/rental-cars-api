@@ -1,7 +1,7 @@
 import { parse } from "csv-parse";
 import fs from "fs";
 
-import { Specification } from "../model/Specification";
+import { Specification } from "../entities/Specification";
 import { SpecificationsRepository } from "../repositories/SpecificationsRepository";
 
 interface ISpecification {
@@ -12,9 +12,9 @@ interface ISpecification {
 class SpecificationService {
   constructor(private specificationsRepository: SpecificationsRepository) {}
 
-  create({ name, description }: ISpecification): void {
+  async create({ name, description }: ISpecification): Promise<void> {
     const specificationAlreadyExists =
-      this.specificationsRepository.findByName(name);
+      await this.specificationsRepository.findByName(name);
     if (specificationAlreadyExists) {
       throw new Error("Specification Already exists.");
     }
@@ -22,8 +22,8 @@ class SpecificationService {
     this.specificationsRepository.create({ name, description });
   }
 
-  list(): Specification[] {
-    const specifications = this.specificationsRepository.list();
+  async list(): Promise<Specification[]> {
+    const specifications = await this.specificationsRepository.list();
     return specifications;
   }
 

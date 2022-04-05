@@ -7,7 +7,7 @@ import { CategoryService } from "../modules/cars/services/CategoryService";
 
 const categoriesRoutes = Router();
 const upload = Multer({ dest: "./tmp" });
-const categoriesRepository = CategoriesRepository.getInstance();
+const categoriesRepository = new CategoriesRepository();
 const categoryService = new CategoryService(categoriesRepository);
 const categoryController = new CategoryController(categoryService);
 

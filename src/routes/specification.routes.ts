@@ -7,7 +7,7 @@ import { SpecificationService } from "../modules/cars/services/SpecificationServ
 
 const specificationRoutes = Router();
 const upload = Multer({ dest: "./tmp" });
-const specificationsRepository = SpecificationsRepository.getInstance();
+const specificationsRepository = new SpecificationsRepository();
 const specificationService = new SpecificationService(specificationsRepository);
 const specificationController = new SpecificationController(
   specificationService

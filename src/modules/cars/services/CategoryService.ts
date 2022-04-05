@@ -1,7 +1,7 @@
 import { parse } from "csv-parse";
 import fs from "fs";
 
-import { Category } from "../model/Category";
+import { Category } from "../entities/Category";
 import { CategoriesRepository } from "../repositories/CategoriesRepository";
 
 interface ICategory {
@@ -12,8 +12,10 @@ interface ICategory {
 class CategoryService {
   constructor(private categoriesRepository: CategoriesRepository) {}
 
-  create({ name, description }: ICategory): void {
-    const categoryAlreadyExists = this.categoriesRepository.findByName(name);
+  async create({ name, description }: ICategory): Promise<void> {
+    const categoryAlreadyExists = await this.categoriesRepository.findByName(
+      name
+    );
     if (categoryAlreadyExists) {
       throw new Error("Category Already exists.");
     }
@@ -21,8 +23,8 @@ class CategoryService {
     this.categoriesRepository.create({ name, description });
   }
 
-  list(): Category[] {
-    const categories = this.categoriesRepository.list();
+  async list(): Promise<Category[]> {
+    const categories = await this.categoriesRepository.list();
     return categories;
   }
 
