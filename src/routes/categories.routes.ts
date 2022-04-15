@@ -1,26 +1,23 @@
 import { Router } from "express";
 import Multer from "multer";
 
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { CategoryController } from "../modules/cars/controllers/CategoryController";
-import { CategoriesRepository } from "../modules/cars/repositories/CategoriesRepository";
-import { CategoryService } from "../modules/cars/services/CategoryService";
 
 const categoriesRoutes = Router();
 const upload = Multer({ dest: "./tmp" });
-const categoriesRepository = new CategoriesRepository();
-const categoryService = new CategoryService(categoriesRepository);
-const categoryController = new CategoryController(categoryService);
 
-categoriesRoutes.post("/", (request, response) => {
-  return categoryController.create(request, response);
-});
+const categoryController = new CategoryController();
 
-categoriesRoutes.get("/", (request, response) => {
-  return categoryController.list(request, response);
-});
+categoriesRoutes.use(ensureAuthenticated);
+categoriesRoutes.post("/", categoryController.create);
 
-categoriesRoutes.post("/import", upload.single("file"), (request, response) => {
-  return categoryController.importFile(request, response);
-});
+categoriesRoutes.get("/", categoryController.list);
+
+categoriesRoutes.post(
+  "/import",
+  upload.single("file"),
+  categoryController.importFile
+);
 
 export { categoriesRoutes };

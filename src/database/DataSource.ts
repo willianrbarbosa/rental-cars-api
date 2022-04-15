@@ -7,7 +7,10 @@ const AppDataSource = new DataSource({
   username: "docker_rentx_db",
   password: "123456",
   database: "rentx",
-  entities: ["src/modules/cars/entities/*.ts"],
+  entities: [
+    "src/modules/cars/entities/*.ts",
+    "src/modules/users/entities/*.ts",
+  ],
   migrations: ["src/database/migrations/*.ts"],
 });
 

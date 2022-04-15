@@ -1,26 +1,30 @@
 import { parse } from "csv-parse";
 import fs from "fs";
+import { inject, injectable } from "tsyringe";
 
+import { AppError } from "../../../errors/AppError";
 import { Category } from "../entities/Category";
-import { CategoriesRepository } from "../repositories/CategoriesRepository";
+import {
+  ICreateCategoryDTO,
+  ICategoriesRepository,
+} from "../repositories/interfaces/ICategoriesRepository";
 
-interface ICategory {
-  name: string;
-  description: string;
-}
-
+@injectable()
 class CategoryService {
-  constructor(private categoriesRepository: CategoriesRepository) {}
+  constructor(
+    @inject("CategoriesRepository")
+    private categoriesRepository: ICategoriesRepository
+  ) {}
 
-  async create({ name, description }: ICategory): Promise<void> {
+  async create({ name, description }: ICreateCategoryDTO): Promise<void> {
     const categoryAlreadyExists = await this.categoriesRepository.findByName(
       name
     );
     if (categoryAlreadyExists) {
-      throw new Error("Category Already exists.");
+      throw new AppError("Category Already exists.");
     }
 
-    this.categoriesRepository.create({ name, description });
+    await this.categoriesRepository.create({ name, description });
   }
 
   async list(): Promise<Category[]> {
@@ -37,10 +41,12 @@ class CategoryService {
     });
   }
 
-  loadCategoriesFromFile(file: Express.Multer.File): Promise<ICategory[]> {
+  loadCategoriesFromFile(
+    file: Express.Multer.File
+  ): Promise<ICreateCategoryDTO[]> {
     return new Promise((resolve, reject) => {
       const strem = fs.createReadStream(file.path);
-      const categories: ICategory[] = [];
+      const categories: ICreateCategoryDTO[] = [];
 
       const parseFile = parse({ delimiter: "," });
       strem.pipe(parseFile);

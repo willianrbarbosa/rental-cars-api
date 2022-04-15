@@ -1,32 +1,22 @@
 import { Router } from "express";
 import Multer from "multer";
 
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
 import { SpecificationController } from "../modules/cars/controllers/SpecificationController";
-import { SpecificationsRepository } from "../modules/cars/repositories/SpecificationsRepository";
-import { SpecificationService } from "../modules/cars/services/SpecificationService";
 
 const specificationRoutes = Router();
 const upload = Multer({ dest: "./tmp" });
-const specificationsRepository = new SpecificationsRepository();
-const specificationService = new SpecificationService(specificationsRepository);
-const specificationController = new SpecificationController(
-  specificationService
-);
+const specificationController = new SpecificationController();
 
-specificationRoutes.post("/", (request, response) => {
-  return specificationController.create(request, response);
-});
+specificationRoutes.use(ensureAuthenticated);
+specificationRoutes.post("/", specificationController.create);
 
-specificationRoutes.get("/", (request, response) => {
-  return specificationController.list(request, response);
-});
+specificationRoutes.get("/", specificationController.list);
 
 specificationRoutes.post(
   "/import",
   upload.single("file"),
-  (request, response) => {
-    return specificationController.importFile(request, response);
-  }
+  specificationController.importFile
 );
 
 export { specificationRoutes };

@@ -1,25 +1,29 @@
 import { parse } from "csv-parse";
 import fs from "fs";
+import { inject, injectable } from "tsyringe";
 
+import { AppError } from "../../../errors/AppError";
 import { Specification } from "../entities/Specification";
-import { SpecificationsRepository } from "../repositories/SpecificationsRepository";
+import {
+  ICreateSpecificationDTO,
+  ISpecificationsRepository,
+} from "../repositories/interfaces/ISpecificationsRepository";
 
-interface ISpecification {
-  name: string;
-  description: string;
-}
-
+@injectable()
 class SpecificationService {
-  constructor(private specificationsRepository: SpecificationsRepository) {}
+  constructor(
+    @inject("SpecificationsRepository")
+    private specificationsRepository: ISpecificationsRepository
+  ) {}
 
-  async create({ name, description }: ISpecification): Promise<void> {
+  async create({ name, description }: ICreateSpecificationDTO): Promise<void> {
     const specificationAlreadyExists =
       await this.specificationsRepository.findByName(name);
     if (specificationAlreadyExists) {
-      throw new Error("Specification Already exists.");
+      throw new AppError("Specification Already exists.");
     }
 
-    this.specificationsRepository.create({ name, description });
+    await this.specificationsRepository.create({ name, description });
   }
 
   async list(): Promise<Specification[]> {
@@ -38,10 +42,10 @@ class SpecificationService {
 
   loadSpecificationFromFile(
     file: Express.Multer.File
-  ): Promise<ISpecification[]> {
+  ): Promise<ICreateSpecificationDTO[]> {
     return new Promise((resolve, reject) => {
       const strem = fs.createReadStream(file.path);
-      const specifications: ISpecification[] = [];
+      const specifications: ICreateSpecificationDTO[] = [];
 
       const parseFile = parse({ delimiter: "," });
       strem.pipe(parseFile);

@@ -1,27 +1,29 @@
 import { Request, Response } from "express";
+import { container } from "tsyringe";
 
 import { SpecificationService } from "../services/SpecificationService";
 
 class SpecificationController {
-  constructor(private specificationService: SpecificationService) {}
-
   async create(request: Request, response: Response): Promise<Response> {
     const { name, description } = request.body;
 
-    await this.specificationService.create({ name, description });
+    const specificationService = container.resolve(SpecificationService);
+    await specificationService.create({ name, description });
 
     return response.status(201).send();
   }
 
   async list(request: Request, response: Response): Promise<Response> {
-    const specifications = await this.specificationService.list();
+    const specificationService = container.resolve(SpecificationService);
+    const specifications = await specificationService.list();
     return response.status(200).json(specifications);
   }
 
   async importFile(request: Request, response: Response): Promise<Response> {
     const { file } = request;
 
-    await this.specificationService.importFile(file);
+    const specificationService = container.resolve(SpecificationService);
+    await specificationService.importFile(file);
     return response.status(201).send();
   }
 }

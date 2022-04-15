@@ -1,27 +1,29 @@
 import { Request, Response } from "express";
+import { container } from "tsyringe";
 
 import { CategoryService } from "../services/CategoryService";
 
 class CategoryController {
-  constructor(private categoryService: CategoryService) {}
-
   async create(request: Request, response: Response): Promise<Response> {
     const { name, description } = request.body;
 
-    await this.categoryService.create({ name, description });
+    const categoryService = container.resolve(CategoryService);
+    await categoryService.create({ name, description });
 
     return response.status(201).send();
   }
 
   async list(request: Request, response: Response): Promise<Response> {
-    const categories = await this.categoryService.list();
+    const categoryService = container.resolve(CategoryService);
+    const categories = await categoryService.list();
     return response.status(200).json(categories);
   }
 
   async importFile(request: Request, response: Response): Promise<Response> {
     const { file } = request;
 
-    await this.categoryService.importFile(file);
+    const categoryService = container.resolve(CategoryService);
+    await categoryService.importFile(file);
     return response.status(201).send();
   }
 }
