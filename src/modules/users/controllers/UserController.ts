@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
-import { UserService } from "../services/UserService";
+import { UserService } from "@modules/users/services/UserService";
 
 class UserController {
   async create(request: Request, response: Response): Promise<Response> {
@@ -22,6 +22,20 @@ class UserController {
     const userService = container.resolve(UserService);
     const users = await userService.list();
     return response.status(200).json(users);
+  }
+
+  async updateUserAvatar(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const { id } = request.user;
+    const avatarFile = request.file.filename;
+
+    const userService = container.resolve(UserService);
+
+    await userService.updateUserAvatar({ userId: id, avatarFile });
+
+    return response.status(204).send();
   }
 }
 

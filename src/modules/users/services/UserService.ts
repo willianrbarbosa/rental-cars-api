@@ -1,12 +1,14 @@
 import { hash } from "bcrypt";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "../../../errors/AppError";
-import { User } from "../entities/User";
+import { AppError } from "@errors/AppError";
+import { User } from "@modules/users/entities/User";
 import {
   ICreateUserDTO,
   IUsersRepository,
-} from "../repositories/interfaces/IUsersRepository";
+  IUpdateUserAvatarDTO,
+} from "@modules/users/repositories/interfaces/IUsersRepository";
+import { deleteFile } from "@utils/file";
 
 @injectable()
 class UserService {
@@ -39,6 +41,21 @@ class UserService {
   async list(): Promise<User[]> {
     const users = await this.UsersRepository.list();
     return users;
+  }
+
+  async updateUserAvatar({
+    userId,
+    avatarFile,
+  }: IUpdateUserAvatarDTO): Promise<void> {
+    const user = await this.UsersRepository.findById(userId);
+
+    if (user.avatar) {
+      await deleteFile(`./tmp/userAvatar/${user.avatar}`);
+    }
+
+    user.avatar = avatarFile;
+
+    await this.UsersRepository.create(user);
   }
 }
 

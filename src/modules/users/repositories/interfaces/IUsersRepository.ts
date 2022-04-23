@@ -1,17 +1,24 @@
-import { User } from "../../entities/User";
+import { User } from "@modules/users/entities/User";
 
 interface ICreateUserDTO {
   name: string;
   email: string;
   password: string;
-  driver_license: string;
+  driver_license?: string;
+  id?: string;
+  avatar?: string;
+}
+
+interface IUpdateUserAvatarDTO {
+  userId: string;
+  avatarFile: string;
 }
 
 interface IUsersRepository {
-  findById(email: string): Promise<User>;
+  findById(id: string): Promise<User>;
   findByEmail(email: string): Promise<User>;
   list(): Promise<User[]>;
   create(data: ICreateUserDTO): Promise<void>;
 }
 
-export { IUsersRepository, ICreateUserDTO };
+export { ICreateUserDTO, IUpdateUserAvatarDTO, IUsersRepository };
