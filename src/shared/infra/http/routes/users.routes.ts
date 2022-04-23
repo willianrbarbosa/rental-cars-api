@@ -2,8 +2,8 @@ import { Router } from "express";
 import Multer from "multer";
 
 import uploadConfig from "@config/upload";
-import { ensureAuthenticated } from "@middlewares/ensureAuthenticated";
 import { UserController } from "@modules/users/controllers/UserController";
+import { ensureAuthenticated } from "@shared/infra/http/middlewares/ensureAuthenticated";
 
 const usersRoutes = Router();
 const uploadAvatar = Multer(uploadConfig.upload("./tmp/userAvatar"));

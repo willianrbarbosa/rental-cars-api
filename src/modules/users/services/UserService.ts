@@ -1,13 +1,13 @@
 import { hash } from "bcrypt";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "@errors/AppError";
-import { User } from "@modules/users/entities/User";
+import { User } from "@modules/users/infra/typeorm/entities/User";
 import {
   ICreateUserDTO,
   IUsersRepository,
   IUpdateUserAvatarDTO,
 } from "@modules/users/repositories/interfaces/IUsersRepository";
+import { AppError } from "@shared/errors/AppError";
 import { deleteFile } from "@utils/file";
 
 @injectable()

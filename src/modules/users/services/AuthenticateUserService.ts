@@ -2,12 +2,12 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "@errors/AppError";
 import {
   IAuthenticateUserDTO,
   IUserTokenDTO,
 } from "@modules/users/repositories/interfaces/IAuthenticateUserDTO";
 import { IUsersRepository } from "@modules/users/repositories/interfaces/IUsersRepository";
+import { AppError } from "@shared/errors/AppError";
 
 @injectable()
 class AuthenticateUserService {

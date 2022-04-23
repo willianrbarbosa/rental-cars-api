@@ -1,8 +1,8 @@
 import { Router } from "express";
 import Multer from "multer";
 
-import { ensureAuthenticated } from "@middlewares/ensureAuthenticated";
 import { CategoryController } from "@modules/cars/controllers/CategoryController";
+import { ensureAuthenticated } from "@shared/infra/http/middlewares/ensureAuthenticated";
 
 const categoriesRoutes = Router();
 const upload = Multer({ dest: "./tmp" });

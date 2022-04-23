@@ -2,12 +2,12 @@ import { parse } from "csv-parse";
 import fs from "fs";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "@errors/AppError";
-import { Category } from "@modules/cars/entities/Category";
+import { Category } from "@modules/cars/infra/typeorm/entities/Category";
 import {
   ICreateCategoryDTO,
   ICategoriesRepository,
 } from "@modules/cars/repositories/interfaces/ICategoriesRepository";
+import { AppError } from "@shared/errors/AppError";
 
 @injectable()
 class CategoryService {

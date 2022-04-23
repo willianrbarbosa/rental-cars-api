@@ -2,12 +2,12 @@ import { parse } from "csv-parse";
 import fs from "fs";
 import { inject, injectable } from "tsyringe";
 
-import { AppError } from "@errors/AppError";
-import { Specification } from "@modules/cars/entities/Specification";
+import { Specification } from "@modules/cars/infra/typeorm/entities/Specification";
 import {
   ICreateSpecificationDTO,
   ISpecificationsRepository,
 } from "@modules/cars/repositories/interfaces/ISpecificationsRepository";
+import { AppError } from "@shared/errors/AppError";
 
 @injectable()
 class SpecificationService {

@@ -8,10 +8,10 @@ const AppDataSource = new DataSource({
   password: "123456",
   database: "rentx",
   entities: [
-    "src/modules/cars/entities/*.ts",
-    "src/modules/users/entities/*.ts",
+    "src/modules/cars/infra/typeorm/entities/*.ts",
+    "src/modules/users/infra/typeorm/entities/*.ts",
   ],
-  migrations: ["src/database/migrations/*.ts"],
+  migrations: ["src/shared/infra/typeorm/migrations/*.ts"],
 });
 
 AppDataSource.initialize()
